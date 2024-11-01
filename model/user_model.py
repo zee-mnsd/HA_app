@@ -13,21 +13,21 @@ from tkinter import messagebox
 from model.mongodb_connection import connect_to_mongodb
 
 class UserModel:
-    def __init__(self, ma_gia_dinh, tin_chu, chan_linh, thanh_vien):
-        self.ma_gia_dinh = ma_gia_dinh
-        self.tin_chu = tin_chu
-        self.chan_linh = chan_linh
-        self.thanh_vien = thanh_vien
-
-    # Thêm người dùng vào cơ sở dữ liệu
-    def save(self):
+    def __init__(self):
         db = connect_to_mongodb()
         if db is None:
             print("Không thể kết nối tới cơ sở dữ liệu.")
             messagebox.showerror("Lỗi", "Không thể kết nối tới cơ sở dữ liệu.")
-            return
+            return 
+        self.collection = db['family']
+
+    # Thêm người dùng vào cơ sở dữ liệu
+    def save(self,  ma_gia_dinh, tin_chu, chan_linh, thanh_vien):
+        self.ma_gia_dinh = ma_gia_dinh
+        self.tin_chu = tin_chu
+        self.chan_linh = chan_linh
+        self.thanh_vien = thanh_vien
         
-        collection = db['family']
         # Tạo document người dùng
         document = {
             "maGiaDinh": self.ma_gia_dinh,
@@ -37,9 +37,27 @@ class UserModel:
         }
 
         try:
-            collection.insert_one(document)
+            self.collection.insert_one(document)
             print("Thông tin đã được lưu thành công!")
             messagebox.showinfo("Thành công", "Thông tin đã được lưu thành công!")
         except Exception as e:
             print(f"Lỗi khi lưu vào MongoDB: {e}")
             messagebox.showerror("Lỗi", "Lỗi khi lưu vào MongoDB: {e}")
+
+    # Tìm kiếm gia đình dựa trên mã gia đình
+    def search(self, ma_gia_dinh):    
+        try:
+            document = self.collection.find_one({"maGiaDinh": ma_gia_dinh})
+            return document
+        except Exception as e:
+             print("Error delete!")
+             messagebox.showwarning("Thông báo", "Không tìm thấy gia đình để xóa.")
+
+    def delete(self, ma_gia_dinh):
+        try:
+            self.collection.delete_one({"maGiaDinh": ma_gia_dinh})
+            print ("Delete success!")
+            messagebox.showinfo("Thông báo", "Đã xóa thành công gia đình!")
+        except Exception as e:
+             print("Error delete!")
+             messagebox.showwarning("Thông báo", "Không tìm thấy gia đình để xóa.")

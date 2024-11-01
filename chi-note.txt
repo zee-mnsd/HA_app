@@ -7,3 +7,5 @@ pip freeze    // kiem tra pip da cai
 pip install -r requirements.txt
 
 pip show    // packet can xem
+
+passGITHUB        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
