@@ -5,6 +5,8 @@ from view.add_user_view import AddUserView
 from controller.add_user_controller import AddUserController
 from view.delete_user_view import DeleteUserView
 from controller.delete_user_controller import DeleteUserController
+from view.edit_user_view import EditUserView
+from controller.edit_user_controller import EditUserController
 
 class MenuView(tk.Tk):
     def __init__(self, controller):
@@ -15,7 +17,7 @@ class MenuView(tk.Tk):
 
         # Khởi tạo các khung (frames) cho các chức năng
         self.add_frame = AddUserView(self, AddUserController(self))
-        self.update_frame = Frame(self) 
+        self.update_frame = EditUserView(self, EditUserController(self))
         self.delete_frame = DeleteUserView(self, DeleteUserController(self))
         self.print_frame = Frame(self)
         for frame in [self.add_frame, self.update_frame, self.delete_frame, self.print_frame]:

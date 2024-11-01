@@ -1,5 +1,4 @@
 from view.menu_view import MenuView
-from view.add_user_view import AddUserView
 from controller.add_user_controller import AddUserController
 
 class MainController:

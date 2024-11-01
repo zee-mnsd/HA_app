@@ -61,3 +61,26 @@ class UserModel:
         except Exception as e:
              print("Error delete!")
              messagebox.showwarning("Thông báo", "Không tìm thấy gia đình để xóa.")
+            
+    def edit(self,  ma_gia_dinh, tin_chu, chan_linh, thanh_vien):
+        self.ma_gia_dinh = ma_gia_dinh
+        self.tin_chu = tin_chu
+        self.chan_linh = chan_linh
+        self.thanh_vien = thanh_vien
+        
+        # Tạo document người dùng
+        document = {
+            "maGiaDinh": self.ma_gia_dinh,
+            "tinChu": self.tin_chu,
+            "chanLinh": self.chan_linh,
+            "thanhVien": self.thanh_vien
+        }
+
+        try:
+            self.collection.delete_one({"maGiaDinh": ma_gia_dinh})
+            self.collection.insert_one(document)
+            print("Thông tin đã được cập nhật thành công!")
+            messagebox.showinfo("Thành công", "Thông tin đã được cập nhật thành công!")
+        except Exception as e:
+            print(f"Lỗi khi lưu vào MongoDB: {e}")
+            messagebox.showerror("Lỗi", "Lỗi khi cập nhật vào MongoDB: {e}")
