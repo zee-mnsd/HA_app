@@ -1,0 +1,9 @@
+requirements-dev.txt       # duoc su dung de luu tru nhung pip dung trong khi phat trien, cu the la luc test
+pip install -r requirements.txt   #install cac pip can dung trong moi truong
+pip install -r requirements-dev.txt  #install cac pip can dung trong test
+
+
+pip freeze    // kiem tra pip da cai
+pip install -r requirements.txt
+
+pip show    // packet can xem
