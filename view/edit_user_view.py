@@ -17,7 +17,7 @@ class EditUserView(tk.Frame):
         self.search_entry.grid(row=0, column=1, sticky="w", pady=2)
 
         self.search_button = tk.Button(self, text="Tìm kiếm", command=self.search_family)
-        self.search_button.grid(row=0, column=2, padx=(5, 2), pady=2)
+        self.search_button.grid(row=0, column=1, padx=(5, 2), pady=2)
 
         # Family code
         tk.Label(self, text="Mã gia đình:").grid(row=1, column=0, sticky="e", padx=(5, 2), pady=2)
@@ -48,7 +48,7 @@ class EditUserView(tk.Frame):
         self.so_luong_entry.grid(row=5, column=1, sticky="w", pady=2)
 
         self.add_rows_button = tk.Button(self, text="Thêm", command=self.update_member_table)
-        self.add_rows_button.grid(row=5, column=2, padx=(5, 2), pady=2)
+        self.add_rows_button.grid(row=5, column=1, padx=(5, 2), pady=2)
 
         # Update button
         self.update_button = tk.Button(self, text="Cập nhật", command=self.on_edit_button_clicked)

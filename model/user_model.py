@@ -108,3 +108,13 @@ class UserModel:
             return families
         except Exception as e:
              messagebox.showwarning("Thông báo", "Không tìm thấy gia đình.")
+
+    def search_list(self, list_ma):    
+        try:
+            documents = []
+            for ma_gia_dinh in list_ma:
+                documents.append(self.collection.find_one({"maGiaDinh": ma_gia_dinh}))
+            return documents
+        except Exception as e:
+             print("Error delete!")
+             messagebox.showwarning("Thông báo", "Không tìm thấy gia đình để xóa.")

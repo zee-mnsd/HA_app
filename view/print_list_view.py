@@ -1,11 +1,14 @@
 import tkinter as tk
 from tkinter import messagebox
+import os
+from pathlib import Path
 
 class PrintListView(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.controller = controller
         self.stt_count = 0
+        self.list_ma = []
         self.place(relwidth=1, relheight=1)
         self.create_widgets()
 
@@ -196,22 +199,10 @@ class PrintListView(tk.Frame):
 
         self.add_to_table(self.stt_count, ma_gia_dinh, tin_chu)        
 
-
-    def cung_1_15(self):
-        self.controller.ngay_print()
-
-    def cung_vu_lan(self):
-        self.controller.vu_lan_print()
-
-    def cung_dau_nam(self):
-        self.controller.dau_nam_print()
-
-    def cung_con_ban(self):
-        self.controller.con_ban_print()
-
     def add_to_table(self, stt, ma_gia_dinh, tin_chu):
         row = self.table_fr.grid_size()[1]  # Đếm số dòng hiện có trong bảng (đã có header)
         print("da tao bang")
+        self.list_ma.append(ma_gia_dinh)
         # Thêm STT, mã gia đình và tên tín chủ vào bảng
         print("row  laf : ")
         print(row)
@@ -253,6 +244,38 @@ class PrintListView(tk.Frame):
         # In thông báo khi headers đã được tạo
         print("Headers, Canvas đã được tạo")
 
-    # Đoạn mã này cần nằm trong một class Tkinter và có `self` để hoạt động chính xác.
+    # Printed ^^
+    @staticmethod
+    def get_desktop_path():
+        if os.name == 'nt':  # Windows
+            return Path.home() / "Desktop"
+        elif os.name == 'posix':  # macOS và Linux
+            # Kiểm tra biến môi trường cho Linux nếu có
+            desktop_path = os.getenv("XDG_DESKTOP_DIR", Path.home() / "Desktop")
+            return Path(desktop_path)
+        else:
+            raise Exception("Hệ điều hành không được hỗ trợ")
+    
+    def cung_1_15(self):
+        desktop_path = self.get_desktop_path() / "ngay1va15.docx"
+        print(f"Đường dẫn Desktop: {desktop_path}")
+        doc_list = self.controller.list_printed(self.list_ma)
+        self.controller.ngay_print(desktop_path, doc_list)
 
-        
+    def cung_vu_lan(self):
+        desktop_path = self.get_desktop_path() / "ngayVL.docx"
+        print(f"Đường dẫn Desktop: {desktop_path}")
+        doc_list = self.controller.list_printed(self.list_ma)
+        self.controller.vu_lan_print(desktop_path, doc_list)
+
+    def cung_dau_nam(self):
+        desktop_path = self.get_desktop_path() / "ngayDN.docx"
+        print(f"Đường dẫn Desktop: {desktop_path}")
+        doc_list = self.controller.list_printed(self.list_ma)
+        self.controller.dau_nam_print(desktop_path, doc_list)
+
+    def cung_con_ban(self):
+        desktop_path = self.get_desktop_path() / "ngayCB.docx"
+        print(f"Đường dẫn Desktop: {desktop_path}")
+        doc_list = self.controller.list_printed(self.list_ma)
+        self.controller.con_ban_print(desktop_path, doc_list)
