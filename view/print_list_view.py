@@ -1,10 +1,11 @@
 import tkinter as tk
 from tkinter import messagebox
 
-class DeleteUserView(tk.Frame):
+class PrintListView(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.controller = controller
+        self.stt_count = 0
         self.place(relwidth=1, relheight=1)
         self.create_widgets()
 
@@ -38,12 +39,39 @@ class DeleteUserView(tk.Frame):
         self.chan_linh_entry = tk.Text(self, height=10, width=70, state='disabled')
         self.chan_linh_entry.grid(row=4, column=1, sticky="w", pady=2)
 
-        self.add_button = tk.Button(self, text="Xóa", command=self.on_delete_button_clicked)
-        self.add_button.grid(row=5, column=1, pady=10, sticky="w")
-
         # Cấu hình để khung chính có thể mở rộng
         self.grid_rowconfigure(3, weight=1)
         self.grid_columnconfigure(1, weight=0)
+
+        # Tạo khung chứa các nút chức năng đặc biệt
+        self.button_frame = tk.Frame(self)
+        self.button_frame.grid(row=5, column=1, sticky="news")
+
+        # Các nút cho các chức năng đặc biệt, đặt vào button_frame
+        self.button_chon = tk.Button(self.button_frame, text="Chọn", command=self.chon)
+        self.button_chon.grid(row=0, column=0, pady=5, sticky="n")
+
+        self.button_cung_1_15 = tk.Button(self.button_frame, text="Cúng 1 và 15", command=self.cung_1_15)
+        self.button_cung_1_15.grid(row=1, column=0, pady=5, sticky="n")
+
+        self.button_vu_lan = tk.Button(self.button_frame, text="Cúng Vu Lan", command=self.cung_vu_lan)
+        self.button_vu_lan.grid(row=1, column=1, pady=5, sticky="n")
+
+        self.button_dau_nam = tk.Button(self.button_frame, text="Cúng đầu năm", command=self.cung_dau_nam)
+        self.button_dau_nam.grid(row=1, column=2, pady=5, sticky="n")
+
+        self.button_con_ban = tk.Button(self.button_frame, text="Cúng con bán", command=self.cung_con_ban)
+        self.button_con_ban.grid(row=1, column=3, pady=5, sticky="n")
+
+        # Tạo Frame mới chiếm từ row=0 đến row=4 và column=2
+        self.right_frame = tk.Frame(self)
+        self.right_frame.grid(row=0, column=2, rowspan=5, sticky="nsew")
+
+        self.list_frame = None
+
+        self.create_frame()
+        # Cấu hình lưới để cột 2 có thể mở rộng
+        self.grid_columnconfigure(2, weight=1)  
 
     def search_family(self):
         # Lấy mã gia đình từ ô nhập
@@ -61,6 +89,7 @@ class DeleteUserView(tk.Frame):
             self.ma_gia_dinh_entry.delete(0, tk.END)
             self.ma_gia_dinh_entry.insert(0, family.get("maGiaDinh", ""))
             self.ma_gia_dinh_entry.config(state='readonly')
+            print(self.ma_gia_dinh_entry.get().strip())
 
             self.tin_chu_entry.config(state='normal')
             self.tin_chu_entry.delete(0, tk.END)
@@ -86,7 +115,7 @@ class DeleteUserView(tk.Frame):
 
         # Khung chứa bảng và thanh cuộn
         self.member_table_frame = tk.Frame(self)
-        self.member_table_frame.grid(row=3, column=1, columnspan=2, sticky="nsew")
+        self.member_table_frame.grid(row=3, column=1, sticky="nsew") #, columnspan=2
 
         # Đảm bảo khung có thể co giãn
         self.member_table_frame.rowconfigure(1, weight=1)
@@ -152,14 +181,78 @@ class DeleteUserView(tk.Frame):
         # Xóa bảng thành viên nếu có
         if self.member_table_frame:
             self.member_table_frame.destroy()
-
-    def on_delete_button_clicked(self):
-        # Lấy mã gia đình từ ô nhập
+    
+    def chon(self):
+        # Tăng STT sau mỗi lần thêm vào bảng
+        self.stt_count += 1
         ma_gia_dinh = self.ma_gia_dinh_entry.get().strip()
-        if not ma_gia_dinh:
-            messagebox.showerror("Lỗi", "Mã gia đình không được để trống.")
+        tin_chu = self.tin_chu_entry.get().strip()
+        print("Da nhap!")
+
+        # Kiểm tra xem có dữ liệu hợp lệ không
+        if not ma_gia_dinh or not tin_chu:
+            messagebox.showwarning("Cảnh báo", "Vui lòng nhập đầy đủ mã gia đình và tên tín chủ.")
             return
 
-        # Gọi phương thức xóa từ controller
-        self.controller.delete_user(ma_gia_dinh)
-        self.clear_entries()
+        self.add_to_table(self.stt_count, ma_gia_dinh, tin_chu)        
+
+
+    def cung_1_15(self):
+        self.controller.ngay_print()
+
+    def cung_vu_lan(self):
+        self.controller.vu_lan_print()
+
+    def cung_dau_nam(self):
+        self.controller.dau_nam_print()
+
+    def cung_con_ban(self):
+        self.controller.con_ban_print()
+
+    def add_to_table(self, stt, ma_gia_dinh, tin_chu):
+        row = self.table_fr.grid_size()[1]  # Đếm số dòng hiện có trong bảng (đã có header)
+        print("da tao bang")
+        # Thêm STT, mã gia đình và tên tín chủ vào bảng
+        print("row  laf : ")
+        print(row)
+        print(stt)
+        tk.Label(self.table_fr, text=str(stt), borderwidth=1, relief="solid", width=5).grid(row=row, column=0, sticky='nsew')
+        tk.Label(self.table_fr, text=ma_gia_dinh, borderwidth=1, relief="solid", width=15).grid(row=row, column=1, sticky='nsew')
+        tk.Label(self.table_fr, text=tin_chu, borderwidth=1, relief="solid", width=50).grid(row=row, column=2, sticky='nsew')
+
+        # Update canvas scrolling region
+        self.table_fr.update_idletasks()
+        self.canvas.config(scrollregion=self.canvas.bbox("all"))
+
+    def create_frame(self):
+        # Xóa bảng cũ nếu có
+        if self.list_frame:
+            self.list_frame.destroy()
+    
+        # Create the frame and canvas
+        self.list_frame = tk.Frame(self.right_frame)
+        self.list_frame.pack(fill='both', expand=True)
+
+        self.canvas = tk.Canvas(self.list_frame)
+        self.canvas.pack(side=tk.LEFT, fill='both', expand=True)
+
+        scrollbar = tk.Scrollbar(self.list_frame, orient="vertical", command=self.canvas.yview)
+        scrollbar.pack(side=tk.RIGHT, fill='y')
+
+        self.canvas.configure(yscrollcommand=scrollbar.set)
+
+        self.table_fr = tk.Frame(self.canvas)
+        self.canvas.create_window((0, 0), window=self.table_fr, anchor='nw')
+        #------------------
+        # Tạo bảng tiêu đề
+        headers = ["STT", "MÃ", "Tín chủ"]
+        column_widths = [5, 15, 50]
+        for col, (header, width) in enumerate(zip(headers, column_widths)):
+            tk.Label(self.table_fr, text=header, borderwidth=1, relief="solid", width=width, anchor='center').grid(row=0, column=col, sticky='nsew')
+
+        # In thông báo khi headers đã được tạo
+        print("Headers, Canvas đã được tạo")
+
+    # Đoạn mã này cần nằm trong một class Tkinter và có `self` để hoạt động chính xác.
+
+        

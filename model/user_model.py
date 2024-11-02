@@ -44,15 +44,6 @@ class UserModel:
             print(f"Lỗi khi lưu vào MongoDB: {e}")
             messagebox.showerror("Lỗi", "Lỗi khi lưu vào MongoDB: {e}")
 
-    # Tìm kiếm gia đình dựa trên mã gia đình
-    def search(self, ma_gia_dinh):    
-        try:
-            document = self.collection.find_one({"maGiaDinh": ma_gia_dinh})
-            return document
-        except Exception as e:
-             print("Error delete!")
-             messagebox.showwarning("Thông báo", "Không tìm thấy gia đình để xóa.")
-
     def delete(self, ma_gia_dinh):
         try:
             self.collection.delete_one({"maGiaDinh": ma_gia_dinh})
@@ -60,7 +51,7 @@ class UserModel:
             messagebox.showinfo("Thông báo", "Đã xóa thành công gia đình!")
         except Exception as e:
              print("Error delete!")
-             messagebox.showwarning("Thông báo", "Không tìm thấy gia đình để xóa.")
+             messagebox.showwarning("Thông báo", "Không xóa gia đình.")
             
     def edit(self,  ma_gia_dinh, tin_chu, chan_linh, thanh_vien):
         self.ma_gia_dinh = ma_gia_dinh
@@ -84,3 +75,36 @@ class UserModel:
         except Exception as e:
             print(f"Lỗi khi lưu vào MongoDB: {e}")
             messagebox.showerror("Lỗi", "Lỗi khi cập nhật vào MongoDB: {e}")
+
+    # Tìm kiếm gia đình dựa trên mã gia đình
+    def search(self, ma_gia_dinh):    
+        try:
+            document = self.collection.find_one({"maGiaDinh": ma_gia_dinh})
+            return document
+        except Exception as e:
+             print("Error delete!")
+             messagebox.showwarning("Thông báo", "Không tìm thấy gia đình để xóa.")
+
+    # Tìm kiếm gia đình dựa trên mã gia đình
+    def list(self, tinChu):    
+        try:
+            """
+            Tìm các gia đình có tên Tín chủ khớp với 'tin_chu_name'.
+            """
+            query = {"tinChu": tinChu}  # Điều kiện truy vấn theo tên tín chủ
+            family_data = self.collection.find(query)
+
+            # Chuyển đổi dữ liệu từ dạng MongoDB cursor sang danh sách Python
+            families = []
+            for family in family_data:
+                # Đảm bảo định dạng và lấy tối đa 3 thành viên đầu tiên
+                formatted_family = {
+                    "maGiaDinh": family.get("maGiaDinh", ""),
+                    "tinChu": family.get("tinChu", ""),
+                    "thanhVien": family.get("thanhVien", [])[:3]  # Chỉ lấy 3 thành viên đầu tiên
+                }
+                families.append(formatted_family)
+
+            return families
+        except Exception as e:
+             messagebox.showwarning("Thông báo", "Không tìm thấy gia đình.")
