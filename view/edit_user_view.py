@@ -129,8 +129,8 @@ class EditUserView(tk.Frame):
         self.canvas.create_window((0, 0), window=self.table_fr, anchor='nw')
 
         # Table headers
-        headers = ["Họ và tên", "Năm sinh", "Con bản"]
-        column_widths = [40, 10, 10]  # Adjusted widths
+        headers = ["Họ và tên", "Năm sinh", "Con bán (x)", "Nam(xy) / Nữ (xx)"]
+        column_widths = [47, 13, 13, 17]  # Adjusted widths
         for col, (header, width) in enumerate(zip(headers, column_widths)):
             tk.Label(self.table_fr, text=header, borderwidth=1, relief="solid", width=width, anchor='center').grid(row=0, column=col, sticky='nsew')
 
@@ -138,7 +138,7 @@ class EditUserView(tk.Frame):
         self.member_entries = []
         for row, member in enumerate(members, start=1):
             row_entries = []
-            for col, (key, width) in enumerate(zip(["ho_va_ten", "nam_sinh", "con_ban"], column_widths)):
+            for col, (key, width) in enumerate(zip(["ho_va_ten", "nam_sinh", "con_ban", "nam_nu"], column_widths)):
                 entry = tk.Entry(self.table_fr, width=width)
                 entry.insert(0, member.get(key, ""))
                 entry.grid(row=row, column=col, sticky='nsew', padx=1, pady=1)
@@ -163,9 +163,10 @@ class EditUserView(tk.Frame):
             ho_va_ten = row_entries[0].get().strip()
             nam_sinh = row_entries[1].get().strip()
             con_ban = row_entries[2].get().strip()
-            if not ho_va_ten or not nam_sinh:
-                messagebox.showerror("Lỗi", "Mỗi thành viên cần có Họ và Tên và Năm sinh.")
+            nam_nu = row_entries[3].get().strip()
+            if not ho_va_ten or not nam_sinh or not nam_nu:
+                messagebox.showerror("Lỗi", "Mỗi thành viên cần có Họ và Tên, Năm sinh và giới tính!")
                 return
-            thanh_vien.append({"ho_va_ten": ho_va_ten, "nam_sinh": nam_sinh, "con_ban": con_ban})
+            thanh_vien.append({"ho_va_ten": ho_va_ten, "nam_sinh": nam_sinh, "con_ban": con_ban, "nam_nu": nam_nu})
 
         self.controller.edit_user(ma_gia_dinh, tin_chu, chan_linh, thanh_vien)

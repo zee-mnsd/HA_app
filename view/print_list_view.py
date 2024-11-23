@@ -66,9 +66,12 @@ class PrintListView(tk.Frame):
         self.button_con_ban = tk.Button(self.button_frame, text="Cúng con bán", command=self.cung_con_ban)
         self.button_con_ban.grid(row=1, column=3, pady=5, sticky="n")
 
+        self.button_con_ban = tk.Button(self.button_frame, text="Cúng sao", command=self.cung_sao)
+        self.button_con_ban.grid(row=1, column=4, pady=5, sticky="n")
+
         # Tạo Frame mới chiếm từ row=0 đến row=4 và column=2
         self.right_frame = tk.Frame(self)
-        self.right_frame.grid(row=0, column=2, rowspan=5, sticky="nsew")
+        self.right_frame.grid(row=0, column=2, rowspan=6, sticky="nsew")
 
         self.list_frame = None
 
@@ -92,7 +95,6 @@ class PrintListView(tk.Frame):
             self.ma_gia_dinh_entry.delete(0, tk.END)
             self.ma_gia_dinh_entry.insert(0, family.get("maGiaDinh", ""))
             self.ma_gia_dinh_entry.config(state='readonly')
-            print(self.ma_gia_dinh_entry.get().strip())
 
             self.tin_chu_entry.config(state='normal')
             self.tin_chu_entry.delete(0, tk.END)
@@ -142,7 +144,7 @@ class PrintListView(tk.Frame):
         canvas.create_window((0, 0), window=self.member_frame, anchor='nw')
 
         # Tạo tiêu đề cho bảng trong headers_frame
-        headers = ["Họ và tên", "Năm sinh", "Con bản"]
+        headers = ["Họ và tên", "Năm sinh", "Con bán"]
         column_widths = [30, 15, 15]  # Đặt khoảng rộng cho từng cột
 
         for col, header in enumerate(headers):
@@ -190,7 +192,6 @@ class PrintListView(tk.Frame):
         self.stt_count += 1
         ma_gia_dinh = self.ma_gia_dinh_entry.get().strip()
         tin_chu = self.tin_chu_entry.get().strip()
-        print("Da nhap!")
 
         # Kiểm tra xem có dữ liệu hợp lệ không
         if not ma_gia_dinh or not tin_chu:
@@ -201,12 +202,7 @@ class PrintListView(tk.Frame):
 
     def add_to_table(self, stt, ma_gia_dinh, tin_chu):
         row = self.table_fr.grid_size()[1]  # Đếm số dòng hiện có trong bảng (đã có header)
-        print("da tao bang")
         self.list_ma.append(ma_gia_dinh)
-        # Thêm STT, mã gia đình và tên tín chủ vào bảng
-        print("row  laf : ")
-        print(row)
-        print(stt)
         tk.Label(self.table_fr, text=str(stt), borderwidth=1, relief="solid", width=5).grid(row=row, column=0, sticky='nsew')
         tk.Label(self.table_fr, text=ma_gia_dinh, borderwidth=1, relief="solid", width=15).grid(row=row, column=1, sticky='nsew')
         tk.Label(self.table_fr, text=tin_chu, borderwidth=1, relief="solid", width=50).grid(row=row, column=2, sticky='nsew')
@@ -241,10 +237,8 @@ class PrintListView(tk.Frame):
         for col, (header, width) in enumerate(zip(headers, column_widths)):
             tk.Label(self.table_fr, text=header, borderwidth=1, relief="solid", width=width, anchor='center').grid(row=0, column=col, sticky='nsew')
 
-        # In thông báo khi headers đã được tạo
         print("Headers, Canvas đã được tạo")
 
-    # Printed ^^
     @staticmethod
     def get_desktop_path():
         if os.name == 'nt':  # Windows
@@ -258,24 +252,25 @@ class PrintListView(tk.Frame):
     
     def cung_1_15(self):
         desktop_path = self.get_desktop_path() / "ngay1va15.docx"
-        print(f"Đường dẫn Desktop: {desktop_path}")
         doc_list = self.controller.list_printed(self.list_ma)
         self.controller.ngay_print(desktop_path, doc_list)
 
     def cung_vu_lan(self):
         desktop_path = self.get_desktop_path() / "ngayVL.docx"
-        print(f"Đường dẫn Desktop: {desktop_path}")
         doc_list = self.controller.list_printed(self.list_ma)
         self.controller.vu_lan_print(desktop_path, doc_list)
 
     def cung_dau_nam(self):
         desktop_path = self.get_desktop_path() / "ngayDN.docx"
-        print(f"Đường dẫn Desktop: {desktop_path}")
         doc_list = self.controller.list_printed(self.list_ma)
         self.controller.dau_nam_print(desktop_path, doc_list)
 
     def cung_con_ban(self):
         desktop_path = self.get_desktop_path() / "ngayCB.docx"
-        print(f"Đường dẫn Desktop: {desktop_path}")
         doc_list = self.controller.list_printed(self.list_ma)
         self.controller.con_ban_print(desktop_path, doc_list)
+
+    def cung_sao(self):
+        desktop_path = self.get_desktop_path() / "cungSAO.docx"
+        doc_list = self.controller.list_printed(self.list_ma)
+        self.controller.sao_print(desktop_path, doc_list)

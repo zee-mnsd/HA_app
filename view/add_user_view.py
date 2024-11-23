@@ -57,7 +57,6 @@ class AddUserView(tk.Frame):
             if num_rows <= 0:
                 raise ValueError
         except ValueError:
-            print("Vui lòng nhập số lượng thành viên hợp lệ (số nguyên dương).")
             messagebox.showerror("Lỗi", "Vui lòng nhập số lượng thành viên hợp lệ (số nguyên dương).")
             return
 
@@ -87,8 +86,8 @@ class AddUserView(tk.Frame):
         canvas.create_window((0, 0), window=self.member_frame, anchor='nw')
 
         # Tạo tiêu đề cho bảng trong headers_frame
-        headers = ["Họ và tên", "Năm sinh", "Con bản (x)"]
-        column_widths = [50, 15, 15]  # Đặt khoảng rộng cho từng cột
+        headers = ["Họ và tên", "Năm sinh", "Con bán (x)", "Nam(xy) / Nữ (xx)"]
+        column_widths = [47, 13, 13, 17]  # Đặt khoảng rộng cho từng cột
 
         for col, header in enumerate(headers):
             tk.Label(headers_frame, text=header, borderwidth=1, relief="solid", width=column_widths[col], anchor='w').grid(row=0, column=col, sticky='nsew')
@@ -136,10 +135,11 @@ class AddUserView(tk.Frame):
                 ho_va_ten = row_entries[0].get().strip()
                 nam_sinh = row_entries[1].get().strip()
                 con_ban = row_entries[2].get().strip()
-                if not ho_va_ten or not nam_sinh:
-                    messagebox.showerror("Lỗi", "Mỗi thành viên cần có Họ và Tên và Năm sinh.")
+                nam_nu = row_entries[3].get().strip()
+                if not ho_va_ten or not nam_sinh or not nam_nu:
+                    messagebox.showerror("Lỗi", "Mỗi thành viên cần có Họ và Tên, Năm sinh và giới tính!")
                     return
-                thanh_vien.append({"ho_va_ten": ho_va_ten, "nam_sinh": nam_sinh, "con_ban": con_ban})
+                thanh_vien.append({"ho_va_ten": ho_va_ten, "nam_sinh": nam_sinh, "con_ban": con_ban, "nam_nu": nam_nu})
 
         self.controller.add_user(ma_gia_dinh, tin_chu, chan_linh, thanh_vien)
         # Sau khi thêm thành công, xóa dữ liệu trên view

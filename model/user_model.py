@@ -16,7 +16,6 @@ class UserModel:
     def __init__(self):
         db = connect_to_mongodb()
         if db is None:
-            print("Không thể kết nối tới cơ sở dữ liệu.")
             messagebox.showerror("Lỗi", "Không thể kết nối tới cơ sở dữ liệu.")
             return 
         self.collection = db['family']
@@ -38,19 +37,15 @@ class UserModel:
 
         try:
             self.collection.insert_one(document)
-            print("Thông tin đã được lưu thành công!")
             messagebox.showinfo("Thành công", "Thông tin đã được lưu thành công!")
         except Exception as e:
-            print(f"Lỗi khi lưu vào MongoDB: {e}")
             messagebox.showerror("Lỗi", "Lỗi khi lưu vào MongoDB: {e}")
 
     def delete(self, ma_gia_dinh):
         try:
             self.collection.delete_one({"maGiaDinh": ma_gia_dinh})
-            print ("Delete success!")
             messagebox.showinfo("Thông báo", "Đã xóa thành công gia đình!")
         except Exception as e:
-             print("Error delete!")
              messagebox.showwarning("Thông báo", "Không xóa gia đình.")
             
     def edit(self,  ma_gia_dinh, tin_chu, chan_linh, thanh_vien):
@@ -70,10 +65,8 @@ class UserModel:
         try:
             self.collection.delete_one({"maGiaDinh": ma_gia_dinh})
             self.collection.insert_one(document)
-            print("Thông tin đã được cập nhật thành công!")
             messagebox.showinfo("Thành công", "Thông tin đã được cập nhật thành công!")
         except Exception as e:
-            print(f"Lỗi khi lưu vào MongoDB: {e}")
             messagebox.showerror("Lỗi", "Lỗi khi cập nhật vào MongoDB: {e}")
 
     # Tìm kiếm gia đình dựa trên mã gia đình
@@ -82,7 +75,6 @@ class UserModel:
             document = self.collection.find_one({"maGiaDinh": ma_gia_dinh})
             return document
         except Exception as e:
-             print("Error delete!")
              messagebox.showwarning("Thông báo", "Không tìm thấy gia đình để xóa.")
 
     # Tìm kiếm gia đình dựa trên mã gia đình
@@ -116,5 +108,4 @@ class UserModel:
                 documents.append(self.collection.find_one({"maGiaDinh": ma_gia_dinh}))
             return documents
         except Exception as e:
-             print("Error delete!")
              messagebox.showwarning("Thông báo", "Không tìm thấy gia đình để xóa.")

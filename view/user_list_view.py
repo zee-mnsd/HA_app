@@ -68,7 +68,3 @@ class UserListView(tk.Frame):
             self.result_frame.grid_rowconfigure(row, weight=1)
 
 
-        headers = ["Họ và tên", "Năm sinh", "Con bản"]
-        column_widths = [30, 15, 15]  # Đặt khoảng rộng cho từng cột
-
-

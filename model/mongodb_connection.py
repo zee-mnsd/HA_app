@@ -8,6 +8,5 @@ def connect_to_mongodb():
         try:
             client = MongoClient("mongodb://localhost:27017/")
         except Exception as e:
-            print(f"Lỗi khi kết nối MongoDB: {e}")
             return None
     return client['ha_DB']

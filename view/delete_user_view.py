@@ -110,7 +110,7 @@ class DeleteUserView(tk.Frame):
         canvas.create_window((0, 0), window=self.member_frame, anchor='nw')
 
         # Tạo tiêu đề cho bảng trong headers_frame
-        headers = ["Họ và tên", "Năm sinh", "Con bản"]
+        headers = ["Họ và tên", "Năm sinh", "Con bán"]
         column_widths = [30, 15, 15]  # Đặt khoảng rộng cho từng cột
 
         for col, header in enumerate(headers):
